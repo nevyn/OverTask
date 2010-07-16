@@ -1,0 +1,8 @@
+//
+// Prefix header for all source files of the 'OverTask' target in the 'OverTask' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+	#import "CollectionUtils.h"
+#endif
