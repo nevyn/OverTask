@@ -11,30 +11,22 @@ float frand() {
 	Node *parent;
 	NSString *name;
 	NSMutableArray *children;
-	NSColor *laneColor;
-	NSColor *selLaneColor;
 	CGRect frame;
 }
 @property (copy) NSString *name;
 @property (assign) Node *parent;
-@property (retain) NSColor *laneColor;
-@property (retain) NSColor *selLaneColor;
 @property CGRect frame;
 @end
 @implementation Node
-@synthesize name, parent, laneColor, selLaneColor, frame;
+@synthesize name, parent, frame;
 -(id)initWithName:(NSString *)name_ children:(NSArray*)children_;
 {
 	name = [name_ copy];
 	children = [NSMutableArray new];
 	for (Node *child in children_)
 		[[self mutableArrayValueForKey:@"children"] addObject:child];
-	
-	/*float r = frand(), g = frand(), b = frand();
-	laneColor = [[NSColor colorWithCalibratedRed:r green:g blue:b alpha:0.1] retain];
-	selLaneColor = [[NSColor colorWithCalibratedRed:r green:g blue:b alpha:0.2] retain];*/
-	
-	return self;
+  
+  return self;
 }
 +(id)nodeWithName:(NSString *)name_ children:(NSArray*)children_;
 {
@@ -60,7 +52,6 @@ float frand() {
 -(NSArray*)children; { return children; }
 -(void)dealloc; {
 	[name release]; [children release];
-	[laneColor release]; [selLaneColor release];
 	[super dealloc];
 }
 @end
