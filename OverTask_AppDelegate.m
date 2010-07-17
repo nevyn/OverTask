@@ -51,6 +51,32 @@ enum {
     test(RegisterEventHotKey(kVK_UpArrow, cmdKey|optionKey|controlKey, nul, t, 0, &OTAltUp));
     test(RegisterEventHotKey(kVK_Space, cmdKey|controlKey, nul, t, 0, &OTSpace));
 #undef test
+	
+	
+	__block NSPoint oldPoint;
+	__block id mouseMonitor = nil;
+	id modifierMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSFlagsChangedMask handler:^(NSEvent *evt) {
+		NSUInteger newFlags = evt.modifierFlags & NSDeviceIndependentModifierFlagsMask;
+		NSLog(@"New flags %d", newFlags);
+		if(newFlags == (NSCommandKeyMask|NSControlKeyMask)) {
+			oldPoint = NSEvent.mouseLocation;
+			mouseMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSMouseMoved handler:^(NSEvent *mouseEvt) {
+				NSLog(@"Mouse monitored");
+				NSPoint newPoint = NSEvent.mouseLocation;
+				
+				float delta = newPoint.y - oldPoint.y;
+				window.alphaValue += delta/100.;
+				
+				oldPoint = newPoint;
+			}];
+			NSLog(@"Starting mouse monitoring %@", mouseMonitor);
+		} else if(mouseMonitor) {
+			NSLog(@"Stopping mouse monitoring");
+			[NSEvent removeMonitor:mouseMonitor];
+			mouseMonitor = nil;
+		}
+	}];
+	NSLog(@"Registered modifier monitor %@", modifierMonitor);
 }
 
 

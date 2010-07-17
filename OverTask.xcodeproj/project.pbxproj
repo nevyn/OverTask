@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		053ED67E11F23D1000F01132 /* NSTimer+blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 053ED67D11F23D1000F01132 /* NSTimer+blocks.m */; };
 		0558E47011F104140029AF18 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0558E46F11F104140029AF18 /* Carbon.framework */; };
 		05847FC511F03579005007C5 /* FullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 05847FC411F03579005007C5 /* FullscreenWindow.m */; };
 		0584801B11F0379A005007C5 /* TaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0584801A11F0379A005007C5 /* TaskView.m */; };
@@ -23,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		053ED67C11F23D1000F01132 /* NSTimer+blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+blocks.h"; sourceTree = "<group>"; };
+		053ED67D11F23D1000F01132 /* NSTimer+blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+blocks.m"; sourceTree = "<group>"; };
 		0558E46F11F104140029AF18 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		05847FC311F03579005007C5 /* FullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FullscreenWindow.h; sourceTree = "<group>"; };
 		05847FC411F03579005007C5 /* FullscreenWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FullscreenWindow.m; sourceTree = "<group>"; };
@@ -89,6 +92,8 @@
 				0584801911F0379A005007C5 /* TaskView.h */,
 				0584801A11F0379A005007C5 /* TaskView.m */,
 				058481A211F0C6D9005007C5 /* JAUtil */,
+				053ED67C11F23D1000F01132 /* NSTimer+blocks.h */,
+				053ED67D11F23D1000F01132 /* NSTimer+blocks.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -217,6 +222,7 @@
 				058481AC11F0C6D9005007C5 /* ExceptionUtils.m in Sources */,
 				058481AD11F0C6D9005007C5 /* Logging.m in Sources */,
 				058481AE11F0C6D9005007C5 /* Test.m in Sources */,
+				053ED67E11F23D1000F01132 /* NSTimer+blocks.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
