@@ -215,14 +215,14 @@ static const CGFloat kTVHeight = 200;
 	Node *sibling = [Node nodeWithName:@"Unnamed" children:[NSArray array]];
 	[[self.selected.parent mutableArrayValueForKey:@"children"] insertObject:sibling atIndex:0];
 	self.selected = sibling;
-	[self renameSelected:nil];
+	[self performSelector:@selector(renameSelected:) withObject:nil afterDelay:0];
 }
 -(IBAction)addSiblingRight:(id)sender;
 {
 	Node *sibling = [Node nodeWithName:@"Unnamed" children:[NSArray array]];
 	[[self.selected.parent mutableArrayValueForKey:@"children"] addObject:sibling];
 	self.selected = sibling;
-	[self renameSelected:nil];
+	[self performSelector:@selector(renameSelected:) withObject:nil afterDelay:0];
 }
 
 -(IBAction)addChild:(id)sender;
@@ -230,15 +230,20 @@ static const CGFloat kTVHeight = 200;
 	Node *child = [Node nodeWithName:@"Unnamed" children:[NSArray array]];
 	[[self.selected?:data mutableArrayValueForKey:@"children"] addObject:child];
 	self.selected = child;
-	[self renameSelected:nil];
+	[self performSelector:@selector(renameSelected:) withObject:nil afterDelay:0];
 }
 -(IBAction)renameSelected:(id)sender;
 {
-	if(!selected) return;
+	if(!selected || editor) return;
 	
-	editor.frame = selected.frame;
-	[editor setHidden:NO];
+	editor = [[NSTextField alloc] initWithFrame:selected.frame];
+	[self addSubview:editor];
+	editor.font = [NSFont systemFontOfSize:20];
+	editor.alignment = NSCenterTextAlignment;
 	editor.stringValue = selected.name;
+	editor.target = self;
+	editor.action = @selector(doneRenamingSelected:);
+	
 	[self.window setIgnoresMouseEvents:NO];
 	[NSApp activateIgnoringOtherApps:YES];
 	[self.window makeKeyAndOrderFront:nil];
@@ -247,11 +252,12 @@ static const CGFloat kTVHeight = 200;
 -(IBAction)doneRenamingSelected:(id)sender;
 {
 	[self.window makeFirstResponder:nil];
-	[editor setHidden:YES];
 	selected.name = editor.stringValue;
 	[self setNeedsDisplay:YES];
 	[self.window setIgnoresMouseEvents:YES];
 	[NSApp deactivate];
+	[editor removeFromSuperview];
+	[editor release]; editor = nil;
 }
 
 @end

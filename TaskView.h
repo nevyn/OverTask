@@ -9,7 +9,7 @@
 	Node *selected;
 	NSColor *border, *fill, *textColor;
 	NSColor *selBorder, *selFill, *selTextColor;
-	IBOutlet NSTextField *editor;
+	NSTextField *editor;
 }
 -(IBAction)moveLeft:(id)sender;
 -(IBAction)moveRight:(id)sender;
