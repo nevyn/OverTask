@@ -12,6 +12,9 @@ enum {
 	kEventHotKeyReleasedSubtype = 9,
 };
 
+#pragma GCC push_options
+#pragma GCC diagnostic ignored "-Wpointer-to-int-cast"
+
 - (void)sendEvent:(NSEvent *)evt;
 {
 	if ([evt type] == NSSystemDefined && [evt subtype] ==kEventHotKeyPressedSubtype) {
@@ -28,7 +31,7 @@ enum {
 	
 	[super sendEvent:evt];
 }
-
+#pragma GCC pop_options
 @end
 
 
