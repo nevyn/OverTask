@@ -257,4 +257,9 @@ static const CGFloat kTVHeight = 200;
 	[editor release]; editor = nil;
 }
 
+-(BOOL)isRenaming;
+{
+	return editor != nil;
+}
+
 @end

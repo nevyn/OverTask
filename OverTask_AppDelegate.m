@@ -19,6 +19,8 @@ enum {
 {
 	if ([evt type] == NSSystemDefined && [evt subtype] ==kEventHotKeyPressedSubtype) {
 		TaskView *tv = [(id)[self delegate] task];
+    
+    if(tv.isRenaming) return;
 		
 		if(evt.data1 == (int)OTLeft) [tv moveLeft:self];
 		if(evt.data1 == (int)OTRight) [tv moveRight:self];
@@ -57,29 +59,28 @@ enum {
 	
 	
 	__block NSPoint oldPoint;
-	__block id mouseMonitor = nil;
-	id modifierMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSFlagsChangedMask handler:^(NSEvent *evt) {
+  __block NSTimer *mouseMonitor = nil;
+  NSEvent*(^flagsHandler)(NSEvent*) = ^(NSEvent *evt) {
 		NSUInteger newFlags = evt.modifierFlags & NSDeviceIndependentModifierFlagsMask;
-		NSLog(@"New flags %d", newFlags);
 		if(newFlags == (NSCommandKeyMask|NSControlKeyMask)) {
 			oldPoint = NSEvent.mouseLocation;
-			mouseMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSMouseMoved handler:^(NSEvent *mouseEvt) {
-				NSLog(@"Mouse monitored");
-				NSPoint newPoint = NSEvent.mouseLocation;
+      mouseMonitor = [NSTimer tc_scheduledTimerWithTimeInterval:0.01 repeats:YES block:^() {
+        NSPoint newPoint = NSEvent.mouseLocation;
 				
 				float delta = newPoint.y - oldPoint.y;
-				window.alphaValue += delta/100.;
+        
+				window.alphaValue = MAX(0.0, MIN(1.0, window.alphaValue + delta/150.));
 				
 				oldPoint = newPoint;
-			}];
-			NSLog(@"Starting mouse monitoring %@", mouseMonitor);
+      }];
 		} else if(mouseMonitor) {
-			NSLog(@"Stopping mouse monitoring");
-			[NSEvent removeMonitor:mouseMonitor];
+      [mouseMonitor invalidate];
 			mouseMonitor = nil;
 		}
-	}];
-	NSLog(@"Registered modifier monitor %@", modifierMonitor);
+    return evt;
+	};
+	[NSEvent addGlobalMonitorForEventsMatchingMask:NSFlagsChangedMask handler:(void(^)(NSEvent*))flagsHandler];
+  [NSEvent addLocalMonitorForEventsMatchingMask:NSFlagsChangedMask handler:flagsHandler];
 }
 
 
