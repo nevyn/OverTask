@@ -85,13 +85,13 @@ float frand() {
 	
 	selected = [[[data.children objectAtIndex:0] children] objectAtIndex:1];
 	
-	fill = [[NSColor colorWithCalibratedRed:0.475 green:0.863 blue:0.492 alpha:0.2] retain];
-	border = [[NSColor colorWithCalibratedRed:0.284 green:0.611 blue:0.306 alpha:0.2] retain];
-	textColor = [[NSColor colorWithCalibratedRed:0.156 green:0.317 blue:0.166 alpha:0.6] retain];
+	fill = [[NSColor colorWithCalibratedRed:0.475 green:0.863 blue:0.492 alpha:0.9] retain];
+	border = [[NSColor colorWithCalibratedRed:0.284 green:0.611 blue:0.306 alpha:0.9] retain];
+	textColor = [[NSColor colorWithCalibratedRed:0.106 green:0.257 blue:0.116 alpha:0.9] retain];
 	
-	selFill = [[NSColor colorWithCalibratedRed:0.475 green:0.863 blue:0.492 alpha:0.8] retain];
-	selBorder = [[NSColor colorWithCalibratedRed:0.284 green:0.611 blue:0.306 alpha:0.8] retain];
-	selTextColor = [[NSColor colorWithCalibratedRed:0.156 green:0.317 blue:0.166 alpha:0.8] retain];
+	selFill = [[NSColor colorWithCalibratedRed:0.275 green:0.663 blue:0.292 alpha:0.9] retain];
+	selBorder = [[NSColor colorWithCalibratedRed:0.184 green:0.411 blue:0.206 alpha:0.9] retain];
+	selTextColor = [[NSColor colorWithCalibratedRed:0.156 green:0.317 blue:0.166 alpha:0.9] retain];
 	
     return self;
 }
@@ -100,10 +100,16 @@ static const CGFloat kTVHeight = 200;
 
 - (void)drawNode:(Node*)node inRect:(CGRect)f;
 {
-	CGRect laneR = f;
-	laneR.size.height = self.frame.size.height - laneR.origin.y;
-	[border set];
-	[[NSBezierPath bezierPathWithRect:laneR] stroke];
+	if(node == selected) {
+		Node *p = node;
+		do {
+			CGRect laneR = p.frame;
+			laneR.size.height = self.frame.size.height - laneR.origin.y;
+			[[NSColor colorWithCalibratedRed:0.475 green:0.863 blue:0.492 alpha:0.3] set];
+
+			[[NSBezierPath bezierPathWithRect:laneR] fill];
+		} while((p = p.parent) != data);
+	}
 	
 	CGRect r = CGRectInset(f, 10, 10);
 	NSBezierPath *bzp = [NSBezierPath bezierPathWithRoundedRect:r xRadius:0 yRadius:0];
