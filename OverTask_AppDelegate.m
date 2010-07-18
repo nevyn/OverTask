@@ -63,7 +63,9 @@ enum {
   BOOL isDir = NO;
   if( ![[NSFileManager defaultManager] fileExistsAtPath:appSupport isDirectory:&isDir] ) {
   	NSError *err = nil;
-    if (![[NSFileManager defaultManager] createDirectoryAtPath:appSupport withIntermediateDirectories:NO attributes:nil error:&err]) {
+    if ([[NSFileManager defaultManager] createDirectoryAtPath:appSupport withIntermediateDirectories:NO attributes:nil error:&err]) {
+    	isDir = YES;
+    } else {
       NSAssert(NO, ([NSString stringWithFormat:@"Failed to create App Support directory %@ : %@", appSupport,err]));
       NSLog(@"Error creating application support directory at %@ : %@",appSupport,err);
       return nil;
