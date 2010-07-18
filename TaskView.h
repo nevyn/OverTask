@@ -5,6 +5,7 @@
 @class Node, TaskView;
 
 @interface TaskView : NSView {
+@public // for the intro
 	Node *data;
 	Node *selected;
 	NSColor *border, *fill, *textColor;

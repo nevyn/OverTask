@@ -4,6 +4,6 @@
 
 
 @interface NSTimer (TCBlocks)
-+ (NSTimer*)tc_timerWithTimeInterval:(NSTimeInterval)ti repeats:(BOOL)yesOrNo block:(void(^)())block;
-+ (NSTimer*)tc_scheduledTimerWithTimeInterval:(NSTimeInterval)ti repeats:(BOOL)yesOrNo block:(void(^)())block;
++ (NSTimer*)tc_timerWithTimeInterval:(NSTimeInterval)ti repeats:(BOOL)yesOrNo block:(void(^)(NSTimer*))block;
++ (NSTimer*)tc_scheduledTimerWithTimeInterval:(NSTimeInterval)ti repeats:(BOOL)yesOrNo block:(void(^)(NSTimer*))block;
 @end

@@ -113,7 +113,11 @@ static float frand() {
 -(void)setupTreeWithData:(NSData*)data_;
 {
 	[data release];
-  data = [[NSKeyedUnarchiver unarchiveObjectWithData:data_] retain];
+  if(data_)
+	  data = [[NSKeyedUnarchiver unarchiveObjectWithData:data_] retain];
+  else
+  	data = [[Node nodeWithName:nil children:nil] retain];
+    
   [self setNeedsDisplay:YES];
 }
 
@@ -241,6 +245,9 @@ static const CGFloat kTVHeight = 200;
 	[[self.selected.parent mutableArrayValueForKey:@"children"] removeObject:self.selected];
 	self.selected = newSel;
   if(treeChanged) treeChanged(self);
+  
+  // the lane drawing is a hack. Redraw twice to get the previous frames right.
+  [NSTimer tc_scheduledTimerWithTimeInterval:0.01 repeats:NO block:^(NSTimer*t) { [self setNeedsDisplay:YES]; }];
 }
 -(IBAction)addSiblingLeft:(id)sender;
 {

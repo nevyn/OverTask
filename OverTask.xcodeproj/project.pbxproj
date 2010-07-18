@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		05091A0311F32D040051353C /* BezelWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 05091A0211F32D040051353C /* BezelWindow.m */; };
+		05091A0611F32D1B0051353C /* OTIntro.m in Sources */ = {isa = PBXBuildFile; fileRef = 05091A0511F32D1B0051353C /* OTIntro.m */; };
 		053ED67E11F23D1000F01132 /* NSTimer+blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 053ED67D11F23D1000F01132 /* NSTimer+blocks.m */; };
 		0558E47011F104140029AF18 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0558E46F11F104140029AF18 /* Carbon.framework */; };
 		05847FC511F03579005007C5 /* FullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 05847FC411F03579005007C5 /* FullscreenWindow.m */; };
@@ -23,6 +25,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		05091A0111F32D040051353C /* BezelWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BezelWindow.h; sourceTree = "<group>"; };
+		05091A0211F32D040051353C /* BezelWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BezelWindow.m; sourceTree = "<group>"; };
+		05091A0411F32D1B0051353C /* OTIntro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTIntro.h; sourceTree = "<group>"; };
+		05091A0511F32D1B0051353C /* OTIntro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTIntro.m; sourceTree = "<group>"; };
 		053ED67C11F23D1000F01132 /* NSTimer+blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+blocks.h"; sourceTree = "<group>"; };
 		053ED67D11F23D1000F01132 /* NSTimer+blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+blocks.m"; sourceTree = "<group>"; };
 		0558E46F11F104140029AF18 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -92,6 +98,10 @@
 				058481A211F0C6D9005007C5 /* JAUtil */,
 				053ED67C11F23D1000F01132 /* NSTimer+blocks.h */,
 				053ED67D11F23D1000F01132 /* NSTimer+blocks.m */,
+				05091A0111F32D040051353C /* BezelWindow.h */,
+				05091A0211F32D040051353C /* BezelWindow.m */,
+				05091A0411F32D1B0051353C /* OTIntro.h */,
+				05091A0511F32D1B0051353C /* OTIntro.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -211,6 +221,8 @@
 				058481AD11F0C6D9005007C5 /* Logging.m in Sources */,
 				058481AE11F0C6D9005007C5 /* Test.m in Sources */,
 				053ED67E11F23D1000F01132 /* NSTimer+blocks.m in Sources */,
+				05091A0311F32D040051353C /* BezelWindow.m in Sources */,
+				05091A0611F32D1B0051353C /* OTIntro.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

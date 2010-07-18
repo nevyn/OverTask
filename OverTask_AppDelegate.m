@@ -94,7 +94,7 @@ enum {
 		NSUInteger newFlags = evt.modifierFlags & NSDeviceIndependentModifierFlagsMask;
 		if(newFlags == (NSCommandKeyMask|NSControlKeyMask)) {
 			oldPoint = NSEvent.mouseLocation;
-      mouseMonitor = [NSTimer tc_scheduledTimerWithTimeInterval:0.01 repeats:YES block:^() {
+      mouseMonitor = [NSTimer tc_scheduledTimerWithTimeInterval:0.01 repeats:YES block:^(NSTimer *t) {
         NSPoint newPoint = NSEvent.mouseLocation;
 				
 				float delta = newPoint.y - oldPoint.y;
@@ -118,6 +118,8 @@ enum {
   };
   NSData *treeData = [NSData dataWithContentsOfFile:self.taskFile];
   if(treeData) [task setupTreeWithData:treeData];
+  
+  //[self showIntro:nil];
 }
 - (void)dealloc {
 
@@ -126,5 +128,16 @@ enum {
     [super dealloc];
 }
 
-
+-(IBAction)showIntro:(id)sender;
+{
+	[self cancelIntro:sender];
+	intro = [OTIntro new];
+  intro.task = task;
+  intro.window = window;
+  [intro run];
+}
+-(IBAction)cancelIntro:(id)sender;
+{
+	[[intro cancel] release]; intro = nil;
+}
 @end

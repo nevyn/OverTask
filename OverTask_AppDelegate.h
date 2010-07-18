@@ -2,6 +2,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TaskView.h"
+#import "OTIntro.h"
 
 @interface OverTaskApp : NSApplication
 @end
@@ -11,8 +12,13 @@
   NSWindow *window;
     
 	IBOutlet TaskView *task;
+  
+  OTIntro *intro;
 }
 @property (readonly) TaskView *task;
 @property (nonatomic, retain) IBOutlet NSWindow *window;
+
+-(IBAction)showIntro:(id)sender;
+-(IBAction)cancelIntro:(id)sender;
 
 @end
