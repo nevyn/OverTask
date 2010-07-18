@@ -143,15 +143,18 @@ static const CGFloat kTVHeight = 200;
 
 	NSMutableParagraphStyle *centered = [[[NSMutableParagraphStyle alloc] init] autorelease];
 	centered.alignment = NSCenterTextAlignment;
-	
-	CGRect textR = r;
-	textR.size.height -= textR.size.height/2. - [[node name] sizeWithAttributes:nil].height;
-	
-	[[node name] drawInRect:textR withAttributes:$dict(
+  
+  NSDictionary *stringAttrs = $dict(
 		NSParagraphStyleAttributeName, centered,
 		NSForegroundColorAttributeName, node==selected?selTextColor:textColor,
 		NSFontAttributeName, [NSFont systemFontOfSize:20],
-	)];
+	);
+	
+	CGRect textR = r;
+  CGSize txSz = [[node name] sizeWithAttributes:stringAttrs];
+	textR.size.height -= textR.size.height/2. - (txSz.height*MIN(1., txSz.width/r.size.width))/2.;
+	
+	[[node name] drawInRect:textR withAttributes:stringAttrs];
 	
 	CGFloat w = f.size.width/node.children.count;
 	CGRect pen = f;
