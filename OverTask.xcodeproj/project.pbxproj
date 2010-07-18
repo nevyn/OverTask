@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		05091A0311F32D040051353C /* BezelWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 05091A0211F32D040051353C /* BezelWindow.m */; };
 		05091A0611F32D1B0051353C /* OTIntro.m in Sources */ = {isa = PBXBuildFile; fileRef = 05091A0511F32D1B0051353C /* OTIntro.m */; };
+		0509222611F35C790051353C /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 0509222511F35C790051353C /* icon.icns */; };
 		053ED67E11F23D1000F01132 /* NSTimer+blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 053ED67D11F23D1000F01132 /* NSTimer+blocks.m */; };
 		0558E47011F104140029AF18 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0558E46F11F104140029AF18 /* Carbon.framework */; };
 		05847FC511F03579005007C5 /* FullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 05847FC411F03579005007C5 /* FullscreenWindow.m */; };
@@ -29,6 +30,7 @@
 		05091A0211F32D040051353C /* BezelWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BezelWindow.m; sourceTree = "<group>"; };
 		05091A0411F32D1B0051353C /* OTIntro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTIntro.h; sourceTree = "<group>"; };
 		05091A0511F32D1B0051353C /* OTIntro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTIntro.m; sourceTree = "<group>"; };
+		0509222511F35C790051353C /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		053ED67C11F23D1000F01132 /* NSTimer+blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+blocks.h"; sourceTree = "<group>"; };
 		053ED67D11F23D1000F01132 /* NSTimer+blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+blocks.m"; sourceTree = "<group>"; };
 		0558E46F11F104140029AF18 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -138,6 +140,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0509222511F35C790051353C /* icon.icns */,
 				8D1107310486CEB800E47090 /* OverTask-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				2F7446970DB6B7EA00F9684A /* MainMenu.xib */,
@@ -202,6 +205,7 @@
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				2F7446990DB6B7EA00F9684A /* MainMenu.xib in Resources */,
+				0509222611F35C790051353C /* icon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
