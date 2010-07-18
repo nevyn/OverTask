@@ -1,6 +1,6 @@
 //  Created by Joachim Bengtsson on 2010-07-16.
 
-float frand() {
+static float frand() {
 	return (rand()%10000)/10000.f;
 }
 
@@ -88,12 +88,12 @@ float frand() {
 	
 	selected = nil;
 	
-	fill = [[NSColor colorWithCalibratedRed:0.475 green:0.863 blue:0.492 alpha:0.9] retain];
-	border = [[NSColor colorWithCalibratedRed:0.284 green:0.611 blue:0.306 alpha:0.9] retain];
+	fill = [[NSColor colorWithCalibratedRed:0.475 green:0.863 blue:0.492 alpha:0.7] retain];
+	border = [[NSColor colorWithCalibratedRed:0.284 green:0.611 blue:0.306 alpha:0.7] retain];
 	textColor = [[NSColor colorWithCalibratedRed:0.106 green:0.257 blue:0.116 alpha:0.9] retain];
 	
-	selFill = [[NSColor colorWithCalibratedRed:0.275 green:0.663 blue:0.292 alpha:0.9] retain];
-	selBorder = [[NSColor colorWithCalibratedRed:0.184 green:0.411 blue:0.206 alpha:0.9] retain];
+	selFill = [[NSColor colorWithCalibratedRed:0.275 green:0.663 blue:0.292 alpha:0.7] retain];
+	selBorder = [[NSColor colorWithCalibratedRed:0.184 green:0.411 blue:0.206 alpha:0.7] retain];
 	selTextColor = [[NSColor colorWithCalibratedRed:0.156 green:0.317 blue:0.166 alpha:0.9] retain];
 	
     return self;
