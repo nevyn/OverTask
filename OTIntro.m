@@ -3,12 +3,13 @@
 #import "OTIntro.h"
 #import "BezelWindow.h"
 
+	static BezelWindow *currentBezel;
+
 
 @implementation OTIntro
 @synthesize task, window, savedData, savedCallback;
 -run
 {
-	static BezelWindow *currentBezel;
   static struct {
   	NSTimeInterval waitBefore;
   	void(^invocation)(OTIntro *self);
@@ -19,7 +20,7 @@
       @" while you code. Press ⌘-. at any time to abort this guide."];
     }},
     {5.0, ^ (OTIntro *self){
-    	[currentBezel fadeOut];
+    	[currentBezel fadeOut]; currentBezel = nil;
     }},
     
     
@@ -33,7 +34,7 @@
     	[self.task->editor setStringValue:@"Refactor saving > CoreData"];
     }},
     {0.5, ^ (OTIntro *self){
-    	[currentBezel fadeOut];
+    	[currentBezel fadeOut]; currentBezel = nil;
     }},
     {1.5, ^ (OTIntro *self) {
     	[self.task doneRenamingSelected:nil];
@@ -66,7 +67,7 @@
     	[self.task doneRenamingSelected:nil];
     }},
     {0.5, ^ (OTIntro *self){
-    	[currentBezel fadeOut];
+    	[currentBezel fadeOut]; currentBezel = nil;
     }},
 
     
@@ -80,7 +81,7 @@
     	[self.task->editor setStringValue:@"Nice message window"];
     }},
     {0.5, ^ (OTIntro *self){
-    	[currentBezel fadeOut];
+    	[currentBezel fadeOut]; currentBezel = nil;
     }},
     {0.5, ^ (OTIntro *self) {
     	[self.task doneRenamingSelected:nil];
@@ -134,7 +135,7 @@
     
     
     {2.5, ^ (OTIntro *self){
-    	[currentBezel fadeOut];
+    	[currentBezel fadeOut]; currentBezel = nil;
     }},
     
     {0.5, ^ (OTIntro *self) {
@@ -156,7 +157,7 @@
     	[self.task doneRenamingSelected:nil];
     }},
     {0.5, ^ (OTIntro *self){
-    	[currentBezel fadeOut];
+    	[currentBezel fadeOut]; currentBezel = nil;
     }},
 
     {0.5, ^ (OTIntro *self) {
@@ -176,7 +177,7 @@
     	[self.task completeSelected:nil];
     }},
     {0.5, ^ (OTIntro *self){
-    	[currentBezel fadeOut];
+    	[currentBezel fadeOut]; currentBezel = nil;
     }},
     {0.5, ^ (OTIntro *self) {
     	currentBezel = [BezelWindow fadeInWithMessage:@"Enjoy!"];
@@ -188,7 +189,7 @@
     	[self.task completeSelected:nil];
     }},
     {0.1, ^ (OTIntro *self){
-    	[currentBezel fadeOut];
+    	[currentBezel fadeOut]; currentBezel = nil;
     }},    
 
     
@@ -223,6 +224,8 @@
   }
   self.task = self.window = nil;
   self.savedCallback = self.savedData = nil;
+  
+ 	[currentBezel fadeOut]; currentBezel = nil;
   return self;
 }
 @end

@@ -119,7 +119,10 @@ enum {
   NSData *treeData = [NSData dataWithContentsOfFile:self.taskFile];
   if(treeData) [task setupTreeWithData:treeData];
   
-  //[self showIntro:nil];
+  if([[NSUserDefaults standardUserDefaults] boolForKey:@"hasRunFirstTime"] == NO) {
+	  [self showIntro:nil];
+   	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"hasRunFirstTime"]; 
+  }
 }
 - (void)dealloc {
 
