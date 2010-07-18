@@ -59,7 +59,18 @@ enum {
 @synthesize window, task;
 -(NSString*)appSupport;
 {
-	return [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"OverTask"];
+	NSString *appSupport = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"OverTask"];
+  BOOL isDir = NO;
+  if( ![[NSFileManager defaultManager] fileExistsAtPath:appSupport isDirectory:&isDir] ) {
+  	NSError *err = nil;
+    if (![[NSFileManager defaultManager] createDirectoryAtPath:appSupport withIntermediateDirectories:NO attributes:nil error:&err]) {
+      NSAssert(NO, ([NSString stringWithFormat:@"Failed to create App Support directory %@ : %@", appSupport,err]));
+      NSLog(@"Error creating application support directory at %@ : %@",appSupport,err);
+      return nil;
+    }
+  }
+  NSAssert(isDir, @"AppSupport must be a directory");
+  return appSupport;
 }
 -(NSString*)taskFile;
 {
