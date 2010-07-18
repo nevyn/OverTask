@@ -6,12 +6,12 @@ float frand() {
 
 #import "TaskView.h"
 
-@interface Node : NSObject
+@interface Node : NSObject <NSCoding>
 {
 	Node *parent;
 	NSString *name;
 	NSMutableArray *children;
-	CGRect frame;
+	CGRect frame; // transient
 }
 @property (copy) NSString *name;
 @property (assign) Node *parent;
@@ -32,6 +32,24 @@ float frand() {
 {
 	return [[[self class] alloc] initWithName:name_ children:children_];
 }
+
+- (id)initWithCoder:(NSCoder *)decoder;
+{
+	name = [[decoder decodeObjectForKey:@"name"] retain];
+
+	children = [NSMutableArray new];
+  NSArray *newChildren = [decoder decodeObjectForKey:@"children"];
+ 	for (Node *child in newChildren)
+		[[self mutableArrayValueForKey:@"children"] addObject:child];
+	
+  return self;
+}
+- (void)encodeWithCoder:(NSCoder *)coder;
+{
+	[coder encodeObject:name forKey:@"name"];
+  [coder encodeObject:children forKey:@"children"];
+}
+
 -(Node*)objectInChildrenAtIndex:(NSInteger)index;
 {
 	return [children objectAtIndex:index];
@@ -60,21 +78,14 @@ float frand() {
 
 
 @implementation TaskView
+@synthesize treeChanged;
 
 - (id)initWithFrame:(NSRect)frame {
     if(![super initWithFrame:frame]) return nil;
 	
-	data = [[Node nodeWithName:nil children:[NSArray arrayWithObjects:
-		[Node nodeWithName:@"Task A" children:[NSArray arrayWithObjects:
-			[Node nodeWithName:@"Task A.1" children:nil],
-			[Node nodeWithName:@"Task A.2" children:nil],
-			nil
-		]],
-		[Node nodeWithName:@"Task B" children:nil],
-		nil
-	]] retain];
+	data = [[Node nodeWithName:nil children:nil] retain];
 	
-	selected = [[[data.children objectAtIndex:0] children] objectAtIndex:1];
+	selected = nil;
 	
 	fill = [[NSColor colorWithCalibratedRed:0.475 green:0.863 blue:0.492 alpha:0.9] retain];
 	border = [[NSColor colorWithCalibratedRed:0.284 green:0.611 blue:0.306 alpha:0.9] retain];
@@ -86,6 +97,25 @@ float frand() {
 	
     return self;
 }
+-(void)dealloc;
+{
+	[data release];
+  [fill release]; [border release]; [textColor release];
+  [selFill release]; [selBorder release]; [selTextColor release];
+  [super dealloc];
+}
+
+-(NSData*)treeData;
+{
+	return [NSKeyedArchiver archivedDataWithRootObject:data];
+}
+-(void)setupTreeWithData:(NSData*)data_;
+{
+	[data release];
+  data = [[NSKeyedUnarchiver unarchiveObjectWithData:data_] retain];
+  [self setNeedsDisplay:YES];
+}
+
 
 static const CGFloat kTVHeight = 200;
 
@@ -206,6 +236,7 @@ static const CGFloat kTVHeight = 200;
 	
 	[[self.selected.parent mutableArrayValueForKey:@"children"] removeObject:self.selected];
 	self.selected = newSel;
+  if(treeChanged) treeChanged(self);
 }
 -(IBAction)addSiblingLeft:(id)sender;
 {
@@ -255,6 +286,7 @@ static const CGFloat kTVHeight = 200;
 	[NSApp deactivate];
 	[editor removeFromSuperview];
 	[editor release]; editor = nil;
+  if(treeChanged) treeChanged(self);
 }
 
 -(BOOL)isRenaming;

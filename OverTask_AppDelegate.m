@@ -41,6 +41,14 @@ enum {
 @implementation OverTask_AppDelegate
 
 @synthesize window, task;
+-(NSString*)appSupport;
+{
+	return [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"OverTask"];
+}
+-(NSString*)taskFile;
+{
+	return [[self appSupport] stringByAppendingPathComponent:@"tasks.overtask"];
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
@@ -81,6 +89,13 @@ enum {
 	};
 	[NSEvent addGlobalMonitorForEventsMatchingMask:NSFlagsChangedMask handler:(void(^)(NSEvent*))flagsHandler];
   [NSEvent addLocalMonitorForEventsMatchingMask:NSFlagsChangedMask handler:flagsHandler];
+  
+  __block typeof(self) blself = self;
+  task.treeChanged = ^ (TaskView *tv) {
+  	[[tv treeData] writeToFile:blself.taskFile atomically:YES];
+  };
+  NSData *treeData = [NSData dataWithContentsOfFile:self.taskFile];
+  if(treeData) [task setupTreeWithData:treeData];
 }
 - (void)dealloc {
 

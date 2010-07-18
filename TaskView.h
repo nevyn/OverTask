@@ -2,7 +2,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class Node;
+@class Node, TaskView;
 
 @interface TaskView : NSView {
 	Node *data;
@@ -10,7 +10,15 @@
 	NSColor *border, *fill, *textColor;
 	NSColor *selBorder, *selFill, *selTextColor;
 	NSTextField *editor;
+  void(^treeChanged)(TaskView*);
 }
+@property (copy) void(^treeChanged)(TaskView*);
+// I'd much, much, much rather have this class mirror a model
+// tree with KVO, and have that model tree saved with CD,
+// but I'd rather have this app working than pretty.
+-(NSData*)treeData;
+-(void)setupTreeWithData:(NSData*)data;
+
 -(IBAction)moveLeft:(id)sender;
 -(IBAction)moveRight:(id)sender;
 -(IBAction)moveUp:(id)sender;
