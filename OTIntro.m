@@ -210,6 +210,7 @@
   stepper(nil);
   
   self.savedCallback = task.treeChanged;
+  task.treeChanged = nil;
   self.savedData = [task treeData];
   [task setupTreeWithData:nil];
   
@@ -219,8 +220,8 @@
 {
 	[latestTimer invalidate]; latestTimer = nil;
   if(savedCallback) {
-	  task.treeChanged = self.savedCallback;
 	  [task setupTreeWithData:self.savedData];
+	  task.treeChanged = self.savedCallback;
   }
   self.task = self.window = nil;
   self.savedCallback = self.savedData = nil;
