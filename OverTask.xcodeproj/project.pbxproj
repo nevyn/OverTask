@@ -31,6 +31,7 @@
 		05091A0411F32D1B0051353C /* OTIntro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTIntro.h; sourceTree = "<group>"; };
 		05091A0511F32D1B0051353C /* OTIntro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTIntro.m; sourceTree = "<group>"; };
 		0509222511F35C790051353C /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
+		050922B911F35E370051353C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		053ED67C11F23D1000F01132 /* NSTimer+blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+blocks.h"; sourceTree = "<group>"; };
 		053ED67D11F23D1000F01132 /* NSTimer+blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+blocks.m"; sourceTree = "<group>"; };
 		0558E46F11F104140029AF18 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };

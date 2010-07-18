@@ -17,7 +17,7 @@
 	} steps[] = {
   	{0.0, ^ (OTIntro *self) {
     	currentBezel = [BezelWindow fadeInWithMessage:@"OverTask is for keeping track of a short-term hierarchical todo"
-      @" while you code.Press ⌘-. at any time to abort this guide. Rerun from help menu at any time."];
+      @" while you code. Press ⌘-. at any time to abort this guide. Rerun from help menu at any time."];
     }},
     {7.0, ^ (OTIntro *self){
     	[currentBezel fadeOut]; currentBezel = nil;
@@ -42,7 +42,7 @@
     
     
   	{1.0, ^ (OTIntro *self) {
-    	currentBezel = [BezelWindow fadeInWithMessage:@"← and → moves to or creates sibling tasks "];
+    	currentBezel = [BezelWindow fadeInWithMessage:@"← and → moves to or creates sibling tasks."];
     }},
     {2.0, ^ (OTIntro *self) {
     	[self.task moveLeft:nil];
