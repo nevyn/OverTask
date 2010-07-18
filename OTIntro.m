@@ -17,9 +17,9 @@
 	} steps[] = {
   	{0.0, ^ (OTIntro *self) {
     	currentBezel = [BezelWindow fadeInWithMessage:@"OverTask is for keeping track of a short-term hierarchical todo"
-      @" while you code. Press ⌘-. at any time to abort this guide."];
+      @" while you code.Press ⌘-. at any time to abort this guide. Rerun from help menu at any time."];
     }},
-    {5.0, ^ (OTIntro *self){
+    {7.0, ^ (OTIntro *self){
     	[currentBezel fadeOut]; currentBezel = nil;
     }},
     
@@ -161,7 +161,7 @@
     }},
 
     {0.5, ^ (OTIntro *self) {
-    	currentBezel = [BezelWindow fadeInWithMessage:@"Finally, all of these tasks can be combined with ⌘-⌃ "
+    	currentBezel = [BezelWindow fadeInWithMessage:@"All of these tasks can be combined with ⌘-⌃ "
       @"to perform them while in any other app."];
     }},
     {1.0, ^ (OTIntro *self) {
@@ -180,6 +180,23 @@
     	[currentBezel fadeOut]; currentBezel = nil;
     }},
     {0.5, ^ (OTIntro *self) {
+    	currentBezel = [BezelWindow fadeInWithMessage:@"Finally, hold ⌘ and ⌃ while moving mouse up and down to adjust opacity."];
+      __block float f = 0.0;
+      [NSTimer tc_scheduledTimerWithTimeInterval:0.02 repeats:YES block:^(NSTimer *arg1) {
+      	f += 0.8;
+        self.window.alphaValue = (sin(f+M_PI/2.)+1.0)/2.0;
+      	if(f > M_PI*4.5) {
+	        self.window.alphaValue = 1.0;
+        	[arg1 invalidate];
+        }
+      }];
+    }},
+    {2.5, ^ (OTIntro *self){
+    	[currentBezel fadeOut]; currentBezel = nil;
+    }},
+
+    
+    {0.5, ^ (OTIntro *self) {
     	currentBezel = [BezelWindow fadeInWithMessage:@"Enjoy!"];
     }},
     {1.5, ^ (OTIntro *self) {
@@ -190,7 +207,12 @@
     }},
     {0.1, ^ (OTIntro *self){
     	[currentBezel fadeOut]; currentBezel = nil;
-    }},    
+    }},
+    
+    {0.0, ^ (OTIntro *self) {
+    	[[NSWorkspace sharedWorkspace] launchApplication:@"OverTask"];
+    }},
+
 
     
     {1.0, ^ (OTIntro *self) {
