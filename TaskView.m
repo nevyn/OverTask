@@ -5,6 +5,7 @@ float frand() {
 }
 
 #import "TaskView.h"
+#import <Carbon/Carbon.h>
 
 @interface Node : NSObject <NSCoding>
 {
@@ -279,7 +280,7 @@ static const CGFloat kTVHeight = 200;
 }
 -(IBAction)doneRenamingSelected:(id)sender;
 {
-	[self.window makeFirstResponder:nil];
+	[self.window makeFirstResponder:self];
 	selected.name = editor.stringValue;
 	[self setNeedsDisplay:YES];
 	[self.window setIgnoresMouseEvents:YES];
@@ -292,6 +293,19 @@ static const CGFloat kTVHeight = 200;
 -(BOOL)isRenaming;
 {
 	return editor != nil;
+}
+
+
+- (BOOL)acceptsFirstResponder;
+{
+	return YES;
+}
+- (BOOL)performKeyEquivalent:(NSEvent *)evt;
+{
+	if(evt.keyCode == kVK_Return) [self renameSelected:nil];
+  else if(evt.keyCode == kVK_Delete || evt.keyCode == kVK_Space) [self completeSelected:nil];
+  else return [super performKeyEquivalent:evt];
+  return YES;
 }
 
 @end

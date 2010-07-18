@@ -3,7 +3,26 @@
 #import "OverTask_AppDelegate.h"
 #import <Carbon/Carbon.h>
 
-static EventHotKeyRef OTLeft, OTRight, OTUp, OTDown, OTReturn, OTAltUp, OTSpace;
+#pragma GCC push_options
+#pragma GCC diagnostic ignored "-Wpointer-to-int-cast"
+
+struct {
+  int key;
+  void (^invocation)(id task);
+  BOOL last;
+
+  EventHotKeyRef keyref;
+} OTKeys[] = {
+	{kVK_LeftArrow, ^(id task){ [task moveLeft:nil]; } },
+  {kVK_RightArrow, ^(id task){ [task moveRight:nil]; } },
+  {kVK_UpArrow, ^(id task){ [task moveUp:nil]; } },
+  {kVK_DownArrow, ^(id task){ [task moveDown:nil]; } },
+  {kVK_Return, ^(id task){ [task renameSelected:nil]; } },
+  {kVK_Delete, ^(id task){ [task completeSelected:nil]; } },
+  {kVK_Space, ^(id task){ [task completeSelected:nil]; } },
+  
+  {0, NULL, YES}
+};
 
 @implementation OverTaskApp
 enum {
@@ -12,8 +31,6 @@ enum {
 	kEventHotKeyReleasedSubtype = 9,
 };
 
-#pragma GCC push_options
-#pragma GCC diagnostic ignored "-Wpointer-to-int-cast"
 
 - (void)sendEvent:(NSEvent *)evt;
 {
@@ -22,20 +39,19 @@ enum {
     
     if(tv.isRenaming) return;
 		
-		if(evt.data1 == (int)OTLeft) [tv moveLeft:self];
-		if(evt.data1 == (int)OTRight) [tv moveRight:self];
-		if(evt.data1 == (int)OTUp) [tv moveUp:self];
-		if(evt.data1 == (int)OTDown) [tv moveDown:self];
-		if(evt.data1 == (int)OTReturn) [tv completeSelected:self];
-		if(evt.data1 == (int)OTAltUp) [tv addChild:self];
-		if(evt.data1 == (int)OTSpace) [tv renameSelected:self];
+   	for(int i = 0; OTKeys[i].last != YES; i++) {
+			if(evt.data1 == (int)OTKeys[i].keyref) {
+      	OTKeys[i].invocation(tv);
+        break;
+      }
+    }
 	}
 	
 	[super sendEvent:evt];
 }
-#pragma GCC pop_options
 @end
 
+#pragma GCC pop_options
 
 
 @implementation OverTask_AppDelegate
@@ -52,19 +68,14 @@ enum {
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 {
-#define test(x) if((s = (x)) != 0) { NSLog(@"Registration error: %d", s); return; }
 	OSStatus s;
 	EventHotKeyID nul;
 	EventTargetRef t = GetApplicationEventTarget();
-    test(RegisterEventHotKey(kVK_LeftArrow, cmdKey|controlKey, nul, t, 0, &OTLeft));
-    test(RegisterEventHotKey(kVK_RightArrow, cmdKey|controlKey, nul, t, 0, &OTRight));
-    test(RegisterEventHotKey(kVK_UpArrow, cmdKey|controlKey, nul, t, 0, &OTUp));
-    test(RegisterEventHotKey(kVK_DownArrow, cmdKey|controlKey, nul, t, 0, &OTDown));
-    test(RegisterEventHotKey(kVK_Return, cmdKey|controlKey, nul, t, 0, &OTReturn));
-    test(RegisterEventHotKey(kVK_UpArrow, cmdKey|optionKey|controlKey, nul, t, 0, &OTAltUp));
-    test(RegisterEventHotKey(kVK_Space, cmdKey|controlKey, nul, t, 0, &OTSpace));
-#undef test
-	
+
+	for(int i = 0; OTKeys[i].last != YES; i++) {
+  	s = RegisterEventHotKey(OTKeys[i].key, cmdKey|controlKey, nul, t, 0, &OTKeys[i].keyref);
+  	if(s != 0) { NSLog(@"Registration error: %d", s); }
+  }	
 	
 	__block NSPoint oldPoint;
   __block NSTimer *mouseMonitor = nil;
