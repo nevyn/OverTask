@@ -132,6 +132,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				050922B911F35E370051353C /* README.md */,
 				32CA4F630368D1EE00C91783 /* OverTask_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
