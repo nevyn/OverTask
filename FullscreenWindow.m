@@ -2,6 +2,10 @@
 
 #import "FullscreenWindow.h"
 
+@interface FullscreenWindow ()
+-(void)screensChanged;
+@end
+
 
 @implementation FullscreenWindow
 -(id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
@@ -13,7 +17,11 @@
 	
 	[self setLevel:NSScreenSaverWindowLevel];
 	
-	[self setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(screensChanged)
+												 name:NSApplicationDidChangeScreenParametersNotification
+											   object:nil];
+	[self screensChanged];
 	
 	[self setIgnoresMouseEvents:YES];
 	[self setBackgroundColor:[NSColor clearColor]];
@@ -22,8 +30,17 @@
 	
 	return self;
 }
+-(void)dealloc;
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super dealloc];
+}
 -(BOOL)canBecomeKeyWindow;
 {
 	return YES;
+}
+-(void)screensChanged;
+{
+	[self setFrame:[[[NSScreen screens] objectAtIndex:0] visibleFrame] display:YES];
 }
 @end
