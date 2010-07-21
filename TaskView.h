@@ -8,10 +8,10 @@
 @public // for the intro
 	Node *data;
 	Node *selected;
-	NSColor *border, *fill, *textColor;
-	NSColor *selBorder, *selFill, *selTextColor;
+	NSColor *colNormal, *colSelected, *colFocused;
 	NSTextField *editor;
   void(^treeChanged)(TaskView*);
+  NSMutableArray *focusStack;
 }
 @property (copy) void(^treeChanged)(TaskView*);
 // I'd much, much, much rather have this class mirror a model
@@ -30,6 +30,8 @@
 -(IBAction)addChild:(id)sender;
 -(IBAction)renameSelected:(id)sender;
 -(IBAction)doneRenamingSelected:(id)sender;
+-(IBAction)focusSelected:(id)sender;
+-(IBAction)unfocus:(id)sender;
 -(IBAction)yank:(id)sender;
 
 @property (readonly) BOOL isRenaming;

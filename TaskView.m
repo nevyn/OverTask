@@ -91,32 +91,29 @@ static float frand() {
 	data = [[Node nodeWithName:nil children:nil] retain];
 	
 	selected = nil;
+	focusStack = [NSMutableArray new];
 	
-	fill = [[NSColor colorWithCalibratedRed:0.475 green:0.863 blue:0.492 alpha:0.7] retain];
-	border = [[NSColor colorWithCalibratedRed:0.284 green:0.611 blue:0.306 alpha:0.7] retain];
-	textColor = [[NSColor colorWithCalibratedRed:0.106 green:0.257 blue:0.116 alpha:0.9] retain];
-	
-	selFill = [[NSColor colorWithCalibratedRed:0.275 green:0.663 blue:0.292 alpha:0.7] retain];
-	selBorder = [[NSColor colorWithCalibratedRed:0.184 green:0.411 blue:0.206 alpha:0.7] retain];
-	selTextColor = [[NSColor colorWithCalibratedRed:0.156 green:0.317 blue:0.166 alpha:0.9] retain];
-	
+	colNormal = [[NSColor colorWithCalibratedRed:0.475 green:0.863 blue:0.492 alpha:0.7] retain];
+	colSelected = [[NSColor colorWithCalibratedRed:0.275 green:0.663 blue:0.292 alpha:0.7] retain];
+	colFocused = [[NSColor colorWithCalibratedRed:0.275 green:0.463 blue:0.663 alpha:0.7] retain];
+		
     return self;
 }
 -(void)dealloc;
 {
-	[data release];
-  [fill release]; [border release]; [textColor release];
-  [selFill release]; [selBorder release]; [selTextColor release];
+  [data release];
+  [colNormal release]; [colSelected release]; [colFocused release];
+  [focusStack release];
   [super dealloc];
 }
 
 -(NSData*)treeData;
 {
-	return [NSKeyedArchiver archivedDataWithRootObject:data];
+  return [NSKeyedArchiver archivedDataWithRootObject:data];
 }
 -(void)setupTreeWithData:(NSData*)data_;
 {
-	[data release];
+  [data release];
   if(data_)
 	  data = [[NSKeyedUnarchiver unarchiveObjectWithData:data_] retain];
   else
@@ -127,26 +124,43 @@ static float frand() {
 
 
 static const CGFloat kTVHeight = 200;
+-(NSColor*)colorForNode:(Node*)node;
+{
+	if(node == selected && [focusStack containsObject:node])
+		return [colSelected blendedColorWithFraction:0.5 ofColor:colFocused];
+	else if(node == selected)
+		return colSelected;
+	else if([focusStack containsObject:node])
+		return colFocused;
+	return colNormal;
+}
 
 - (void)drawNode:(Node*)node inRect:(CGRect)f;
 {
+	NSColor *fill = [self colorForNode:node];
+	NSColor *border = [[fill blendedColorWithFraction:0.2 ofColor:[NSColor blackColor]] retain];
+	NSColor *textColor = [[fill blendedColorWithFraction:0.8 ofColor:[NSColor blackColor]] retain];
+
 	if(node == selected) {
 		Node *p = node;
 		do {
 			CGRect laneR = p.frame;
 			laneR.size.height = self.frame.size.height - laneR.origin.y;
-			[[NSColor colorWithCalibratedRed:0.475 green:0.863 blue:0.492 alpha:0.3] set];
+			[[[self colorForNode:p] colorWithAlphaComponent:0.3] set];
 
 			[[NSBezierPath bezierPathWithRect:laneR] fill];
-		} while((p = p.parent) != data);
+			
+			p = p.parent;
+			if(p == data || (focusStack.count > 0 && p == [(Node*)focusStack.lastObject parent])) break;
+		} while(YES);
 	}
 	
 	CGRect r = CGRectInset(f, 10, 10);
 	NSBezierPath *bzp = [NSBezierPath bezierPathWithRoundedRect:r xRadius:0 yRadius:0];
-	[node==selected?selFill:fill set];
+	[fill set];
 	[bzp fill];
 
-	[node==selected?selBorder:border set];
+	[border set];
 	[bzp stroke];
 
 	NSMutableParagraphStyle *centered = [[[NSMutableParagraphStyle alloc] init] autorelease];
@@ -154,7 +168,7 @@ static const CGFloat kTVHeight = 200;
   
   NSDictionary *stringAttrs = $dict(
 		NSParagraphStyleAttributeName, centered,
-		NSForegroundColorAttributeName, node==selected?selTextColor:textColor,
+		NSForegroundColorAttributeName, textColor,
 		NSFontAttributeName, [NSFont systemFontOfSize:20],
 	);
 	
@@ -179,9 +193,14 @@ static const CGFloat kTVHeight = 200;
 - (void)drawRect:(NSRect)dirtyRect {
 	CGFloat w = self.frame.size.width/data.children.count;
 	CGRect pen = CGRectMake(0, 0, w, kTVHeight);
-	for (Node *n in data.children) {
-		[self drawNode:n inRect:pen];
-		pen.origin.x += w;
+	if(focusStack.count == 0)
+		for (Node *n in data.children) {
+			[self drawNode:n inRect:pen];
+			pen.origin.x += w;
+		}
+	else {
+		pen.size.width = self.frame.size.width;
+		[self drawNode:focusStack.lastObject inRect:pen];
 	}
 }
 
@@ -193,11 +212,20 @@ static const CGFloat kTVHeight = 200;
 		selected = nil;
 	[self setNeedsDisplay:YES];
 }
+-(Node*)bottommost;
+{
+  if(focusStack.count > 0)
+    return focusStack.lastObject;
+  return [data.children objectAtIndex:0];
+}
+
 
 -(IBAction)moveLeft:(id)sender;
 {
 	if(data.children.count==0) { [self addChild:self]; return; }
-	if(!selected) { self.selected = [data.children lastObject]; return; }
+	if(!selected) { self.selected = self.bottommost; return; }
+	if(selected == focusStack.lastObject) { self.selected = nil; return; }
+	
 	int newIndex = [self.selected.parent.children indexOfObject:self.selected] - 1;
 	if(newIndex >= 0)
 		self.selected = [self.selected.parent.children objectAtIndex:newIndex];
@@ -206,7 +234,9 @@ static const CGFloat kTVHeight = 200;
 -(IBAction)moveRight:(id)sender;
 {
 	if(data.children.count==0) { [self addChild:self]; return; }
-	if(!selected) { self.selected = [data.children objectAtIndex:0]; return; }
+	if(!selected) { self.selected = self.bottommost; return; }
+	if(selected == focusStack.lastObject) { self.selected = nil; return; }
+	
 	int newIndex = [self.selected.parent.children indexOfObject:self.selected] + 1;
 	if(newIndex < self.selected.parent.children.count)
 		self.selected = [self.selected.parent.children objectAtIndex:newIndex];
@@ -215,7 +245,7 @@ static const CGFloat kTVHeight = 200;
 -(IBAction)moveUp:(id)sender;
 {
 	if(data.children.count==0) { [self addChild:self]; return; }
-	if(!selected) { self.selected = [data.children objectAtIndex:0]; return; }
+	if(!selected) { self.selected = self.bottommost; return; }
 	if(!self.selected.children.count) { 
 		[self addChild:self];
 		return;
@@ -226,28 +256,34 @@ static const CGFloat kTVHeight = 200;
 {
 	if(data.children.count==0) { [self addChild:self]; return; }
 	if(!selected) {
-		Node *n = [data.children objectAtIndex:0];
+		Node *n = self.bottommost;
 		while(n.children.count > 0)
 			n = [n.children objectAtIndex:0];
 		self.selected = n;
-		return;
+	} else {
+		if(self.selected == focusStack.lastObject)
+			self.selected = nil;
+		else
+			self.selected = self.selected.parent;
 	}
-	self.selected = self.selected.parent;
 }
 
 -(IBAction)completeSelected:(id)sender;
 {
-	NSArray *siblings = self.selected.parent.children;
-	int selIdx = [siblings indexOfObject:self.selected];
-	Node *newSel = self.selected.parent;
-	if(siblings.count > 1)
-		if(selIdx > 0)
-			newSel = [siblings objectAtIndex:selIdx-1];
-		else
-			newSel = [siblings objectAtIndex:1];
+  if(!selected) return;
+  if(selected == focusStack.lastObject) [self unfocus:nil];
+  
+  NSArray *siblings = self.selected.parent.children;
+  int selIdx = [siblings indexOfObject:self.selected];
+  Node *newSel = self.selected.parent;
+  if(siblings.count > 1)
+    if(selIdx > 0)
+      newSel = [siblings objectAtIndex:selIdx-1];
+    else
+      newSel = [siblings objectAtIndex:1];
 	
-	[[self.selected.parent mutableArrayValueForKey:@"children"] removeObject:self.selected];
-	self.selected = newSel;
+  [[self.selected.parent mutableArrayValueForKey:@"children"] removeObject:self.selected];
+  self.selected = newSel;
   if(treeChanged) treeChanged(self);
   
   // the lane drawing is a hack. Redraw twice to get the previous frames right.
@@ -304,9 +340,30 @@ static const CGFloat kTVHeight = 200;
   if(treeChanged) treeChanged(self);
 }
 
+-(IBAction)focusSelected:(id)sender;
+{
+  if(!selected) return;
+  if(selected == focusStack.lastObject) { return; }
+  [focusStack addObject:selected];
+  [self setNeedsDisplay:YES];
+  // the lane drawing is a hack. Redraw twice to get the previous frames right.
+  [NSTimer tc_scheduledTimerWithTimeInterval:0.01 repeats:NO block:^(NSTimer*t) { [self setNeedsDisplay:YES]; }];
+}
+-(IBAction)unfocus:(id)sender;
+{
+  if(focusStack.count == 0) return;
+  [focusStack removeLastObject];
+  [self setNeedsDisplay:YES];
+  // the lane drawing is a hack. Redraw twice to get the previous frames right.
+  [NSTimer tc_scheduledTimerWithTimeInterval:0.01 repeats:NO block:^(NSTimer*t) { [self setNeedsDisplay:YES]; }];
+}
+
+
 -(IBAction)yank:(id)sender;
 {
   if(!selected) return;
+  if(selected == focusStack.lastObject) [self unfocus:nil];
+
   
   Node *nodeToYank = [[selected retain] autorelease];
   Node *yankParent = nodeToYank.parent;
@@ -330,8 +387,11 @@ static const CGFloat kTVHeight = 200;
   [siblings removeObject:nodeToYank];
   for (Node *n in yankChildren)
 	  [siblings insertObject:n atIndex:j++];
+	  
   
   if(treeChanged) treeChanged(self);
+  
+  [NSTimer tc_scheduledTimerWithTimeInterval:0.01 repeats:NO block:^(NSTimer*t) { [self setNeedsDisplay:YES]; }];
 }
 
 -(BOOL)isRenaming;
@@ -346,9 +406,10 @@ static const CGFloat kTVHeight = 200;
 }
 - (BOOL)performKeyEquivalent:(NSEvent *)evt;
 {
-	if(evt.keyCode == kVK_Return) [self renameSelected:nil];
   if(evt.keyCode == kVK_Return) [self renameSelected:nil];
   else if(evt.keyCode == kVK_Delete || evt.keyCode == kVK_Space) [self completeSelected:nil];
+  else if(evt.keyCode == kVK_ANSI_F) [self focusSelected:nil];
+  else if(evt.keyCode == kVK_ANSI_D) [self unfocus:nil];
   else if(evt.keyCode == kVK_ANSI_Y) [self yank:nil];
   else return [super performKeyEquivalent:evt];
   return YES;
