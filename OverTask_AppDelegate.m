@@ -20,6 +20,7 @@ struct {
   {kVK_Return, ^(id task){ [task renameSelected:nil]; } },
   {kVK_Delete, ^(id task){ [task completeSelected:nil]; } },
   {kVK_Space, ^(id task){ [task completeSelected:nil]; } },
+  {kVK_ANSI_Y, ^(id task){ [task yank:nil]; } },
   
   {0, NULL, YES}
 };

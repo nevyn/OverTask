@@ -73,6 +73,10 @@ static float frand() {
 	[name release]; [children release];
 	[super dealloc];
 }
+-(NSString*)description;
+{
+	return self.name;
+}
 @end
 
 
@@ -300,6 +304,36 @@ static const CGFloat kTVHeight = 200;
   if(treeChanged) treeChanged(self);
 }
 
+-(IBAction)yank:(id)sender;
+{
+  if(!selected) return;
+  
+  Node *nodeToYank = [[selected retain] autorelease];
+  Node *yankParent = nodeToYank.parent;
+  
+  NSArray *yankChildren = [nodeToYank children];
+  NSMutableArray *siblings = [yankParent mutableArrayValueForKey:@"children"];
+  
+  NSInteger indexOfSelectedWas = [siblings indexOfObject:selected];
+  NSInteger j = indexOfSelectedWas;
+  
+  if(yankChildren.count > 0)
+	self.selected = [yankChildren objectAtIndex:0];
+  else if(siblings.count > 1)
+		if(indexOfSelectedWas > 0)
+			self.selected = [siblings objectAtIndex:indexOfSelectedWas-1];
+		else
+			self.selected = [siblings objectAtIndex:1];
+  else
+	self.selected = self.selected.parent;
+  
+  [siblings removeObject:nodeToYank];
+  for (Node *n in yankChildren)
+	  [siblings insertObject:n atIndex:j++];
+  
+  if(treeChanged) treeChanged(self);
+}
+
 -(BOOL)isRenaming;
 {
 	return editor != nil;
@@ -313,7 +347,9 @@ static const CGFloat kTVHeight = 200;
 - (BOOL)performKeyEquivalent:(NSEvent *)evt;
 {
 	if(evt.keyCode == kVK_Return) [self renameSelected:nil];
+  if(evt.keyCode == kVK_Return) [self renameSelected:nil];
   else if(evt.keyCode == kVK_Delete || evt.keyCode == kVK_Space) [self completeSelected:nil];
+  else if(evt.keyCode == kVK_ANSI_Y) [self yank:nil];
   else return [super performKeyEquivalent:evt];
   return YES;
 }

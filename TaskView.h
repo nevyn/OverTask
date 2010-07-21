@@ -30,6 +30,7 @@
 -(IBAction)addChild:(id)sender;
 -(IBAction)renameSelected:(id)sender;
 -(IBAction)doneRenamingSelected:(id)sender;
+-(IBAction)yank:(id)sender;
 
 @property (readonly) BOOL isRenaming;
 @end
