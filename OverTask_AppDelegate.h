@@ -9,11 +9,13 @@
 
 @interface OverTask_AppDelegate : NSObject 
 {
-  NSWindow *window;
-    
+	NSWindow *window;
+	IBOutlet NSWindow *cheatSheet;
+	    
 	IBOutlet TaskView *task;
-  
-  OTIntro *intro;
+
+	
+	OTIntro *intro;
 }
 @property (readonly) TaskView *task;
 @property (nonatomic, retain) IBOutlet NSWindow *window;
