@@ -245,8 +245,10 @@
 	  [task setupTreeWithData:self.savedData];
 	  task.treeChanged = self.savedCallback;
   }
-  self.task = self.window = nil;
-  self.savedCallback = self.savedData = nil;
+  self.task = nil;
+  self.window = nil;
+  self.savedCallback = nil;
+  self.savedData = nil;
   
  	[currentBezel fadeOut]; currentBezel = nil;
   return self;
